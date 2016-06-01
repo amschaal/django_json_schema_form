@@ -1,0 +1,66 @@
+{% extends "admin/change_form.html" %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="/static/django_jsf/bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="/static/django_jsf/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script type="text/javascript" src="/static/django_jsf/bower_components/tv4/tv4.js"></script>
+<script type="text/javascript" src="/static/django_jsf/bower_components/objectpath/lib/ObjectPath.js"></script>
+<script type="text/javascript" src="/static/django_jsf/bower_components/angular-schema-form/dist/schema-form.min.js"></script>
+<script type="text/javascript" src="/static/django_jsf/bower_components/angular-schema-form/dist/bootstrap-decorator.min.js"></script>
+<script>
+angular.module('jsf', ['schemaForm'])
+.controller('FormController', function($scope) {
+    var form = this;
+    $scope.testing = 'blah';
+    form.schema = [
+      {text:'learn angular', done:true},
+      {text:'build an angular app', done:false}];
+ 
+    form.form = function() {
+      todoList.todos.push({text:todoList.todoText, done:false});
+      todoList.todoText = '';
+    };
+    form.testing = 'bar';
+    form.yourName = 'Bob';
+    
+    $scope.schema = {
+ 	    type: "object",
+ 	    properties: {
+ 	      name: { type: "string", minLength: 2, title: "Name", description: "Name or alias" },
+ 	      title: {
+ 	        type: "string",
+ 	        enum: ['dr','jr','sir','mrs','mr','NaN','dj']
+ 	      }
+ 	    }
+ 	  };
+
+	  $scope.form = [
+	    "*",
+	    {
+	      type: "submit",
+	      title: "Save"
+	    }
+	  ];
+
+	  $scope.model = {};
+    
+  });
+
+</script>
+{% endblock %}
+{% load i18n admin_urls %}
+{% block object-tools %}
+<h1>Wow!!!!</h1>
+<input type="text" ng-model="yourName" placeholder="Enter a name here">
+      <hr>
+      <h1>Hello {% verbatim %}{{yourName}}! {{model}}{% endverbatim %}</h1>
+      <form sf-schema="schema" sf-form="form" sf-model="model"></form>
+{{block.super}}
+{% endblock %}
+{% block content %}
+	<div ng-app="jsf" >
+	<div ng-controller="FormController">
+	{{block.super}}
+	</div>
+	</div>
+{% endblock %}
+
